@@ -72,6 +72,7 @@ const ProgressBarSolution = ({ hangAfterMs = 15000 }) => {
         className="Button-start-request"
         theme="green"
         isDisabled={animationState.isLoading}
+        isLoading={animationState.isLoading}
         onClick={startRequest}>
         <span
           className="__content">
