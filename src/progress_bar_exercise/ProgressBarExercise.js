@@ -1,11 +1,13 @@
 import React from "react";
 import Exercise from "../exercise/Exercise";
+import ProgressBarSolution from '../solutions/ProgressBarSolution';
 
 const ProgressBarExercise = () => {
   return (
-    <div className="progress-bar-exercise">
+    <div
+      className="progress-bar-exercise">
       <Exercise
-        solution={<Solution />}
+        solution={<ProgressBarSolution />}
         specsUrl="https://github.com/SpiffInc/spiff_react_exercises/issues/1"
         title="Progress Bar Exercise"
       />
@@ -14,9 +16,3 @@ const ProgressBarExercise = () => {
 };
 
 export default ProgressBarExercise;
-
-// ----------------------------------------------------------------------------------
-
-const Solution = () => {
-  return <div>Add solution here</div>;
-};

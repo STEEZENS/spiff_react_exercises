@@ -1,0 +1,15 @@
+Progress Bar Solution Notes
+
+1. Overall - I really enjoyed this exercise! I work in Vue Js all day so this
+was a great React refresher.
+
+2. V1 - It's great there wasn't a strict deadline because v1 took me through two
+refactors (as seen in v1 commit history)! I started by overthinking the problem
+and wanting progress control at an interval but soon realized the benefits of
+using simple CSS transitions/animations.
+
+3. V2 - WIP
+
+3. Improvements - TBD
+
+4. Testing - TBD
