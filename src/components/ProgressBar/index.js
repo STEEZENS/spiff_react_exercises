@@ -1,8 +1,14 @@
 import React from 'react';
 
-const ProgressBar = ({ percent, isInProgress, isFinished }) => {
+const ProgressBar = ({
+  percent,
+  isInProgress,
+  isFinished,
+  transitionDuration = 1000,
+}) => {
   const computedStyle = {
     width: `${percent}%`,
+    transitionDuration: `${transitionDuration}ms`,
   };
 
   const computedClasses = [

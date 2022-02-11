@@ -6,12 +6,11 @@ const Button = ({
   theme = '',
   type = 'button',
   isDisabled,
-  isLoading,
   onClick,
 }) => {
   return (
     <button
-      className={`Button theme-${theme} ${className} ${isLoading ? 'isLoading' : ''}`}
+      className={`Button theme-${theme} ${className}`}
       type={type}
       disabled={isDisabled}
       onClick={onClick}>

@@ -1,67 +1,80 @@
 import React, { useState, useEffect } from 'react';
-import { clamp, round } from 'lodash';
 import Button from '../../components/Button';
 import ProgressBar from '../../components/ProgressBar';
 
-const ProgressBarSolution = ({ hangAfterSeconds = 15 }) => {
-  const [intervalId, setIntervalId] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isFinished, setIsFinished] = useState(false);
-  const [secondsElapsed, setSecondsElapsed] = useState(0);
-  const [percent, setPercent] = useState(0);
+function buildAnimationMap(hangMs) {
+  // @TODO build breakpoints here...
+  return [
+    {
+      id: 'INACTIVE',
+      width: 0,
+      transitionDuration: 0,
+      isLoading: false,
+    },
+    {
+      id: 'LOADING',
+      width: 90,
+      transitionDuration: hangMs,
+      isLoading: true,
+    },
+    {
+      id: 'FINISHED',
+      width: 100,
+      transitionDuration: 1000,
+      isLoading: true,
+      isFinished: true,
+    },
+  ];
+}
 
+const ProgressBarSolution = ({ hangAfterMs = 15000 }) => {
+  const [animationMap, setAnimationMap] = useState(buildAnimationMap(hangAfterMs));
+  const [activeAnimationId, setActiveAnimationId] = useState('INACTIVE');
+  const [activeAnimationStep, setActiveAnimationStep] = useState({});
+
+  // Rebuild animation map if deps change
   useEffect(() => {
-    if (isFinished) return setPercent(100);
-    if (!isLoading) return setPercent(0);
-
-    const newPercent = Math.floor((secondsElapsed / hangAfterSeconds) * 100);
-
-    return setPercent(clamp(newPercent, 0, 90));
+    setAnimationMap(buildAnimationMap(hangAfterMs));
   }, [
-    isLoading,
-    isFinished,
-    secondsElapsed,
-    hangAfterSeconds,
+    hangAfterMs,
   ]);
 
-  function tick() {
-    setSecondsElapsed((secondsElapsed) => {
-      return round(secondsElapsed + 0.1, 2);
-    });
-  }
+  // Set activeAnimationStep when activeAnimationId changes
+  useEffect(() => {
+    const newStep = animationMap.find(({ id }) => id === activeAnimationId);
+    setActiveAnimationStep(newStep);
+  }, [
+    animationMap,
+    activeAnimationId,
+  ]);
 
   function startRequest() {
-    setIsLoading(true);
-    setIntervalId(setInterval(tick, 100));
+    setActiveAnimationId('LOADING');
   }
 
   function finishRequest() {
-    setIsFinished(true);
-    clearInterval(intervalId)
-    setIntervalId(null);
+    setActiveAnimationId('FINISHED');
     setTimeout(() => resetRequest(), 3000);
   }
 
   function resetRequest() {
-    setIsLoading(false);
-    setIsFinished(false);
-    setSecondsElapsed(0);
+    setActiveAnimationId('INACTIVE');
   }
 
   return (
     <div
       className="ProgressBarSolution">
       <ProgressBar
-        percent={percent}
-        isInProgress={isLoading}
-        isFinished={isFinished}
+        percent={activeAnimationStep.width}
+        isInProgress={activeAnimationStep.isLoading}
+        isFinished={activeAnimationStep.isFinished}
+        transitionDuration={activeAnimationStep.transitionDuration}
       />
 
       <Button
         className="Button-start-request"
         theme="green"
-        isDisabled={isLoading}
-        isLoading={isLoading}
+        isDisabled={activeAnimationStep.isLoading}
         onClick={startRequest}>
         <span
           className="__content">
@@ -75,7 +88,7 @@ const ProgressBarSolution = ({ hangAfterSeconds = 15 }) => {
 
       <Button
         theme="red"
-        isDisabled={isFinished || !isLoading}
+        isDisabled={activeAnimationStep.isFinished || !activeAnimationStep.isLoading}
         onClick={finishRequest}>
         Finish Request
       </Button>
