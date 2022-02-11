@@ -5,10 +5,12 @@ const ProgressBar = ({
   isInProgress,
   isFinished,
   transitionDuration = 1000,
+  transitionTimingFunction = 'ease',
 }) => {
   const computedStyle = {
     width: `${percent}%`,
     transitionDuration: `${transitionDuration}ms`,
+    transitionTimingFunction,
   };
 
   const computedClasses = [
