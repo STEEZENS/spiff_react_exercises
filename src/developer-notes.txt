@@ -1,0 +1,26 @@
+Progress Bar Solution Notes
+
+1. Overall - I really enjoyed this exercise! I work in Vue Js all day so this
+was a great React refresher.
+
+2. V1 - It's great there wasn't a strict deadline because v1 took me two
+refactors (as seen in v1 commit history)! I started by overthinking the problem
+and wanting progress control at an interval but soon realized the benefits of
+using simple CSS transitions/animations.
+
+3. V2 - I had to pick my brain for a good minute choosing a simple/best solution
+for the breakpoint requirement. I instinctively wanted to use requestAnimationFrame
+or setInterval and compute a delta between the current progress and current
+breakpoint on each poll. But I finally realized a simple animation map could be
+passed to a timeout which not only makes things easier to reason about, but also
+better for performance.
+
+3. Improvements - A major improvement would be type safety. A few of my functions
+and props don't validate their parameters/values which may be fine for this exercise,
+but in a production environment Typescript would be a great improvement.
+In v2, a small detail that could be improved is the timing function. The progress
+comes to a slight stop at each breakpoint. I'd like it to be a bit more fluid.
+
+4. Testing - Honestly, I feel like I went well over the allotted time for this
+exercise and for the sake of submitting my work never got to testing (so the
+story goes with testing...)

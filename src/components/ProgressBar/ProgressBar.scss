@@ -1,0 +1,26 @@
+.ProgressBar {
+  $progress-bar-height: 6px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: $progress-bar-height;
+  opacity: 0;
+  overflow: hidden;
+  background: linear-gradient(to right, $sunrise, $red);
+
+  // States
+  &.isInProgress {
+    opacity: 1;
+    transition: width 1s linear 0s;
+  }
+  &.isFinished {
+    animation: fadeOut 1s ease 2s forwards;
+  }
+}
+
+// Animations
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}

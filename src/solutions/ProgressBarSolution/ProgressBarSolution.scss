@@ -1,0 +1,31 @@
+.ProgressBarSolution {
+  padding: 8px;
+}
+
+.ProgressBarSolution__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Button-start-request {
+  margin-right: 8px;
+  .__loading {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    opacity: 0;
+  }
+}
+
+.Button-start-request.isLoading {
+  .__content {
+    opacity: 0;
+  }
+  .__loading {
+    opacity: 1;
+  }
+}
