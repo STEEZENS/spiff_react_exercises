@@ -1,80 +1,77 @@
-import React, { useState, useEffect } from 'react';
+import React, { useReducer } from 'react';
 import Button from '../../components/Button';
 import ProgressBar from '../../components/ProgressBar';
 
-function buildAnimationMap(hangMs) {
-  // @TODO build breakpoints here...
-  return [
-    {
-      id: 'INACTIVE',
-      width: 0,
-      transitionDuration: 0,
-      isLoading: false,
-    },
-    {
-      id: 'LOADING',
-      width: 90,
-      transitionDuration: hangMs,
-      isLoading: true,
-    },
-    {
-      id: 'FINISHED',
-      width: 100,
-      transitionDuration: 1000,
-      isLoading: true,
-      isFinished: true,
-    },
-  ];
-}
+const INACTIVE = 'INACTIVE';
+const LOADING = 'LOADING';
+const FINISHED = 'FINISHED';
 
 const ProgressBarSolution = ({ hangAfterMs = 15000 }) => {
-  const [animationMap, setAnimationMap] = useState(buildAnimationMap(hangAfterMs));
-  const [activeAnimationId, setActiveAnimationId] = useState('INACTIVE');
-  const [activeAnimationStep, setActiveAnimationStep] = useState({});
+  const [
+    animationState,
+    dispatchAnimation
+  ] = useReducer(animationMapReducer, {
+    width: 0,
+    transitionDuration: 0,
+    isLoading: false,
+  });
 
-  // Rebuild animation map if deps change
-  useEffect(() => {
-    setAnimationMap(buildAnimationMap(hangAfterMs));
-  }, [
-    hangAfterMs,
-  ]);
+  function animationMapReducer(state, { type }) {
+    switch (type) {
+      case INACTIVE:
+        return {
+          width: 0,
+          transitionDuration: 0,
+          isLoading: false,
+        };
 
-  // Set activeAnimationStep when activeAnimationId changes
-  useEffect(() => {
-    const newStep = animationMap.find(({ id }) => id === activeAnimationId);
-    setActiveAnimationStep(newStep);
-  }, [
-    animationMap,
-    activeAnimationId,
-  ]);
+      case LOADING:
+        return {
+          width: 90,
+          transitionDuration: hangAfterMs,
+          isLoading: true,
+        };
+
+      case FINISHED:
+        return {
+          width: 100,
+          transitionDuration: 1000,
+          isLoading: true,
+          isFinished: true,
+        };
+
+      default:
+        return state;
+    }
+  };
 
   function startRequest() {
-    setActiveAnimationId('LOADING');
+    dispatchAnimation({ type: LOADING });
   }
 
   function finishRequest() {
-    setActiveAnimationId('FINISHED');
+    dispatchAnimation({ type: FINISHED });
     setTimeout(() => resetRequest(), 3000);
   }
 
   function resetRequest() {
-    setActiveAnimationId('INACTIVE');
+    dispatchAnimation({ type: INACTIVE });
   }
 
   return (
     <div
       className="ProgressBarSolution">
       <ProgressBar
-        percent={activeAnimationStep.width}
-        isInProgress={activeAnimationStep.isLoading}
-        isFinished={activeAnimationStep.isFinished}
-        transitionDuration={activeAnimationStep.transitionDuration}
+        percent={animationState.width}
+        isInProgress={animationState.isLoading}
+        isFinished={animationState.isFinished}
+        transitionDuration={animationState.transitionDuration}
       />
 
       <Button
         className="Button-start-request"
         theme="green"
-        isDisabled={activeAnimationStep.isLoading}
+        isDisabled={animationState.isLoading}
         onClick={startRequest}>
         <span
           className="__content">
@@ -88,7 +85,7 @@ const ProgressBarSolution = ({ hangAfterMs = 15000 }) => {
 
       <Button
         theme="red"
-        isDisabled={activeAnimationStep.isFinished || !activeAnimationStep.isLoading}
+        isDisabled={animationState.isFinished || !animationState.isLoading}
         onClick={finishRequest}>
         Finish Request
       </Button>
